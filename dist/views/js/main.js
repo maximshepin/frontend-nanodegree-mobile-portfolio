@@ -436,8 +436,9 @@ var resizePizzas = function(size) {
       default:
           console.log("bug in sizeSwitcher");
       }
-    var randomPizzas =document.querySelectorAll(".randomPizzaContainer");
-    for (var i = 0; i < randomPizzas.length; i++) {
+    var randomPizzas =document.getElementsByClassName("randomPizzaContainer"); //replaced jQuery selector
+    var randomPizzasLength = randomPizzas.length; //created variable out of the loop
+    for (var i = 0; i < randomPizzasLength; i++) {
       randomPizzas[i].style.width = newWidth + "%";
     }
   }
@@ -454,8 +455,8 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
+var pizzasDiv = document.getElementById("randomPizzas");//moved pizzaDiv out of the loop
 for (var i = 2; i < 50; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -488,15 +489,19 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
   //used native JScript selectors instead of jQury
   var items = document.getElementsByClassName('mover');
-  //calculate base phase out of the loop
-  var phase = (document.body.scrollTop / 1250);
+  //create array of phase out of the loop 
+
+  var phases = [];
+  for (var i = 0; i < 5; i++) {
+    phases.push(Math.sin((document.body.scrollTop / 1250)+i));
+  } 
   //use variable for lenght property of items.
   var numPizzaas = items.length;
+  var phase;
   for (var i = 0; i < numPizzaas ; i++) {
     //current Phase is caculated regarding of iteration
-    currentphase = Math.sin(phase + (i % 5));
-    
-    items[i].style.left = items[i].basicLeft + 100 * currentphase + 'px';
+    phase = phases[i % 5];
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
   window.animating = false;
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -523,11 +528,23 @@ function animationReadyCheck(){
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
+  //pizzasOnScreen, calculated dynamically according to the viewport size
+  
+  var screenHeight = document.body.clientHeight;
+  var pizzasOnScreen = 40;//for Height bigger thatn 1024px
   var cols = 8;
   var s = 256;
-  var movpizzas = document.querySelector("#movingPizzas1");
-  for (var i = 0; i < 22; i++) {
-    //amount of moving pizzas objects redused from 100 to 22(what is good for my 2k monitor)
+
+  if (screenHeight<768){
+      pizzasOnScreen = 20;
+  }
+  if (screenHeight<1024){
+      pizzasOnScreen = 30;
+  }
+  
+  
+  var movpizzas = document.getElementById("movingPizzas1");//used getElementbyID instead of jQuery selector
+  for (var i = 0; i < pizzasOnScreen; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
