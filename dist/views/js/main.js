@@ -429,7 +429,7 @@ var resizePizzas = function(size) {
           
       case "2":
         newWidth = 33.3;
-        
+        break;
       case "3":
         newWidth = 50;
         break;
@@ -529,19 +529,10 @@ function animationReadyCheck(){
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   //pizzasOnScreen, calculated dynamically according to the viewport size
-  
-  var screenHeight = document.body.clientHeight;
-  var pizzasOnScreen = 40;//for Height bigger thatn 1024px
+  var intFrameHeight = window.innerHeight; 
   var cols = 8;
   var s = 256;
-
-  if (screenHeight<768){
-      pizzasOnScreen = 20;
-  }
-  if (screenHeight<1024){
-      pizzasOnScreen = 30;
-  }
-  
+  var pizzasOnScreen = intFrameHeight/s*cols;
   
   var movpizzas = document.getElementById("movingPizzas1");//used getElementbyID instead of jQuery selector
   for (var i = 0; i < pizzasOnScreen; i++) {
