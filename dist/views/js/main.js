@@ -486,21 +486,16 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-
-/*  var items = document.getElementsByClassName('mover');
-  var phase = Math.sin((document.body.scrollTop / 1250));
-  var phaseAr = [phase, phase+1, phase+2,phase+3,phase+4, phase+5];
-  for (var i = 0; i < items.length; i++) {
-    
-    items[i].style.left = items[i].basicLeft + 100 * phaseAr[i%5] + 'px';
-  }*/
-
+  //used native JScript selectors instead of jQury
   var items = document.getElementsByClassName('mover');
+  //calculate base phase out of the loop
   var phase = (document.body.scrollTop / 1250);
+  //use variable for lenght property of items.
   var numPizzaas = items.length;
   for (var i = 0; i < numPizzaas ; i++) {
+    //current Phase is caculated regarding of iteration
     currentphase = Math.sin(phase + (i % 5));
-    //items[i].style.transform = 'translateX('+(500 * currentphase) + 'px)';
+    
     items[i].style.left = items[i].basicLeft + 100 * currentphase + 'px';
   }
   window.animating = false;
@@ -515,7 +510,9 @@ function updatePositions() {
 
 }
 
-// runs updatePositions on scroll
+
+
+//requestAnimationFrame is used here while animating
 window.addEventListener('scroll', animationReadyCheck);
 function animationReadyCheck(){
   if (!window.animating) {
@@ -530,6 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var s = 256;
   var movpizzas = document.querySelector("#movingPizzas1");
   for (var i = 0; i < 22; i++) {
+    //amount of moving pizzas objects redused from 100 to 22(what is good for my 2k monitor)
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
@@ -539,7 +537,8 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     movpizzas.appendChild(elem);
   }
-  //updatePositions();
-  requestAnimationFrame(updatePositions);
+// runs updatePositions on scroll
+updatePositions();
+
   
 });
